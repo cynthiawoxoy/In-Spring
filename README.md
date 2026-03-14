@@ -26,7 +26,7 @@ It's a good idea to list more points than you need for this so that if your poin
 
 ***Your proposal must follow this format:***
 
-# [Project Title]
+# [ In Spring ]
 *Xinyi(Cynthia) Wang*
 
 ## Description
@@ -34,7 +34,7 @@ It's a good idea to list more points than you need for this so that if your poin
 *Player will control an animal jumping through the world, using its tail to trigger specific switches that cause according flower to bloom. Game ends when all the flowers in the world are in blossom. If chain physics is possible, the tail naturally follows the player's movements and swing through space. To add some difficulty to the game, only specific part of player's long tail can activate matched switches(use color of patterns to indicate the match). Collision detection with quad tree improvement will be performed in the process.*
 
 ## Game Tasks
-*Complexity Point Subtotal: [9]*
+*Complexity Point Subtotal: [12]*
 
 #### Task 1 - charged jump [1] Complexity Points
 
@@ -42,9 +42,15 @@ It's a good idea to list more points than you need for this so that if your poin
 
 *Charged jump affects the velocity or acceleration of player, therefore, affects area the player's tail could sweep through.*
 
-#### Task 2 - Rotation Animation [1] Complexity Points
+#### Task 2.1 - Rotation Animation [1] Complexity Points
 
 *Allow entities to rotate an angle.*
+
+*Flower petals will use rotation animation when they bloom.*
+
+#### Task 2.2 - Rotation Animation, advanced version [3] Complexity Points
+
+*For different flowers or plants, using combination of rotations to control subpart of plants, so that plants of different species each have customized animations of blossoms.*
 
 *Flower petals will use rotation animation when they bloom.*
 
