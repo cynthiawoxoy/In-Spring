@@ -10,11 +10,11 @@ namespace Input
 {
     void InputManager::update()
     {
-        this->keyLeft = IsKeyDown(KEY_LEFT);
-        this->keyRight = IsKeyDown(KEY_RIGHT);
-        this->keyDown = IsKeyDown(KEY_DOWN);
-        this->keyUp = IsKeyDown(KEY_UP);
+        this->moveLeft = IsKeyDown(KEY_LEFT);
+        this->moveRight = IsKeyDown(KEY_RIGHT);
+        this->getDown = IsKeyDown(KEY_DOWN);
+        this->standUp = IsKeyDown(KEY_UP);
 
-        this->keySpace = IsKeyDown(KEY_SPACE);
+        this->jump = IsKeyPressed(KEY_SPACE);
     }
 }

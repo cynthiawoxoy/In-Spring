@@ -9,12 +9,12 @@ namespace Input
 {
     struct InputManager
     {
-        bool keyLeft = false;
-        bool keyRight = false;
-        bool keyUp = false;
-        bool keyDown = false;
+        bool moveLeft = false;
+        bool moveRight = false;
+        bool standUp = false;
+        bool getDown = false;
 
-        bool keySpace = false;
+        bool jump = false;
 
         void update();
     };

@@ -42,7 +42,7 @@ It's a good idea to list more points than you need for this so that if your poin
 
 *Charged jump affects the velocity or acceleration of player, therefore, affects area the player's tail could sweep through.*
 
-#### Task 2 - Draw Flowers [1] Complexity Points
+#### Task 2 - Draw Flowers [1-3] Complexity Points
 
 *Use individual petal and leaf images to form flowers. Set plant components to according locations. It might take longer than 2hrs if aiming for flowers' aesthetic lookings.*
 

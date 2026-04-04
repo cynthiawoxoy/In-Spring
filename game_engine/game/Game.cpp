@@ -103,37 +103,8 @@ namespace Game
 
     void Game::onUpdateBegin(World& world)
     {
-        // Input directly affects player velocity.
-        Entity player = world.findEntity(playerId).value();
-        player.vx() = 0;
-        if (runtime.inputManager.keyLeft)
-            player.vx() = -1;
-        if (runtime.inputManager.keyRight)
-            player.vx() = 1;
+        onUpdatePlayer(world);
 
-        player.vy() = 0;
-        if (runtime.inputManager.keyUp)
-            player.vy() = 1;
-        if (runtime.inputManager.keyDown)
-            player.vy() = -1;
-
-
-        if (runtime.inputManager.keySpace)
-        {
-            for (int i = 0; i < 1; i++)
-            {
-                world.createEntity(animatedSquareArchetype,
-                                   player.x(), player.y(),
-                                   randomFloat(-0.25, 0.25),
-                                   randomFloat(-0.25, 0.25),
-                                   0.025, 0.025,
-                                   blue,
-                                   Entity::STATE_DEFAULT,
-                                   ColliderShape::RECT, LAYER_BLUE_SQUARES,
-                                   {},
-                                   INVALID_SPRITE_ID);
-            }
-        }
 
         // Bounce logic
         for (auto& archetype : world.archetypes)
@@ -212,5 +183,33 @@ namespace Game
         auto player = world.findEntity(playerId).value();
         runtime.renderer.viewPointX = player.x();
         runtime.renderer.viewPointY = player.y();
+    }
+
+    void Game::onUpdatePlayer(World& world)
+    {
+        // Input directly affects player velocity.
+        Entity player = world.findEntity(playerId).value();
+        player.vx() = 0;
+        if (runtime.inputManager.moveLeft)
+            player.vx() = -1;
+        if (runtime.inputManager.moveRight)
+            player.vx() = 1;
+
+        player.vy() = 0;
+        // TODO: should I check if player on a platform here?
+
+
+        /*
+        if (runtime.inputManager.standUp)
+            // TODO: switch to standup position and show a dialoge
+        if (runtime.inputManager.getDown)
+            // TODO: get down
+        */
+
+
+        if (runtime.inputManager.jump)
+        {
+
+        }
     }
 }

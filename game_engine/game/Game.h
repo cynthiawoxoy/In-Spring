@@ -11,6 +11,8 @@ namespace Game
 {
     using namespace EngineRuntime;
 
+    float gravity = -2.0f;
+
     struct Game final : IGame
     {
         Runtime runtime;
@@ -35,6 +37,8 @@ namespace Game
         void onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions) override;
         void onUpdatePostCollisionResolution(World& world, std::vector<Collision>& vector) override;
         int run();
+
+        void onUpdatePlayer(World& world);
 
         enum Layers : ColliderLayerId
         {

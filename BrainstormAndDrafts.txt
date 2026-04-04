@@ -1,0 +1,33 @@
+- Tasks implementing:
+1. Gravity for player
+
+
+
+
+
+
+
+- inputs
+key left / right - turning directions
+key space - jump
+(key up - standing up? and a dialog?)
+
+- game
+gravity
+border of the world - or a big map
+
+- art style
+清冷的初春 - 迷茫 - 微雨？-> 温暖
+
+
+- 节奏
+小雨 - “暮云沉沉，暴雨将至。” “等待是漫长的————你知道有风暴正在赶来，但你无处可逃，你只能在原地等待。”
+
+大雨 -
+
+中雨 - “花儿开了。暴雨未至，但身侧有生命值得怜惜，眼下有事可做。” “主动地选择踏入徒劳的行动，正是生命的实践”
+
+
+花的意义 - human interactions，sensations
+
+

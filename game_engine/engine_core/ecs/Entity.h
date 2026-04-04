@@ -39,6 +39,9 @@ namespace EngineCore
         float& vx();
         float& vy();
 
+        // Acceleration
+        float& ay();
+
         // Size
         float& width();
         float& height();

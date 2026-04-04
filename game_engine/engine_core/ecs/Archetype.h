@@ -20,12 +20,13 @@ namespace EngineCore
         {
             COMP_POSITION = 1 << 0,
             COMP_VELOCITY = 1 << 1,
-            COMP_SIZE = 1 << 2,
-            COMP_COLOR = 1 << 3,
-            COMP_STATE = 1 << 4,
-            COMP_COLLIDER = 1 << 5,
-            COMP_ANIMATION = 1 << 6,
-            COMP_SPRITE = 1 << 7,
+            COMP_ACCELERATION = 1 << 2,
+            COMP_SIZE = 1 << 3,
+            COMP_COLOR = 1 << 4,
+            COMP_STATE = 1 << 5,
+            COMP_COLLIDER = 1 << 6,
+            COMP_ANIMATION = 1 << 7,
+            COMP_SPRITE = 1 << 8,
         };
 
         //Fixed per archetype.
@@ -40,6 +41,9 @@ namespace EngineCore
 
         // Velocity Component
         std::vector<float> vx, vy;
+
+        // Acceleration Component
+        std::vector<float> ax, ay;
 
         // Size Component
         std::vector<float> width, height;
@@ -75,6 +79,7 @@ namespace EngineCore
 
         bool hasPosition() { return componentMask & COMP_POSITION; }
         bool hasVelocity() { return componentMask & COMP_VELOCITY; }
+        bool hasAcceleration() { return componentMask & COMP_ACCELERATION; }
         bool hasSize() { return componentMask & COMP_SIZE; }
         bool hasColor() { return componentMask & COMP_COLOR; }
         bool hasState() { return componentMask & COMP_STATE; }
