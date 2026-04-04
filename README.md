@@ -34,7 +34,7 @@ It's a good idea to list more points than you need for this so that if your poin
 *Player will control an animal jumping through the world, using its tail to trigger specific switches that cause according flower to bloom. Game ends when all the flowers in the world are in blossom. If chain physics is possible, the tail naturally follows the player's movements and swing through space. To add some difficulty to the game, only specific part of player's long tail can activate matched switches(use color of patterns to indicate the match). Collision detection with quad tree improvement will be performed in the process.*
 
 ## Game Tasks
-*Complexity Point Subtotal: [12]*
+*Complexity Point Subtotal: [7]*
 
 #### Task 1 - charged jump [1] Complexity Points
 
@@ -48,9 +48,9 @@ It's a good idea to list more points than you need for this so that if your poin
 
 *Flower petals will use rotation animation when they bloom.*
 
-#### Task 2.2 - Rotation Animation, advanced version [3] Complexity Points
+#### Task 2.2 - Rotation Animation, advanced version [2] Complexity Points
 
-*For different flowers or plants, using combination of rotations to control subpart of plants, so that plants of different species each have customized animations of blossoms.*
+*For different flowers or plants, using combination of rotations to control subpart of plants, so that plants of different species each have customized animations of blossoms. This function with Rotation Animation in 2.1 together form 3 points*
 
 *Flower petals will use rotation animation when they bloom.*
 
@@ -60,19 +60,7 @@ It's a good idea to list more points than you need for this so that if your poin
 
 *Animation for blooming flowers.*
 
-#### Task 4 - Horizon of the world [2] Complexity Points
-
-*Change of platform's moving speed. A display of signpost.*
-
-*In case of platform system: when player is brought by moving platforms too far away from original world, the platform's moving speed will gradually approaches 0, and a signpost will appear on screen to indicate direction of going back.*
-
-#### Task 5 - Text dialogue popup [3] Complexity Points
-
-*Text dialogue popup. The dialogue will change after mouse clicking it.*
-
-*Conversation between player and the flowers could perform as a guide of gameplay or game narrative.*
-
-#### Task 6 - Radial color Animation [1] Complexity Points
+#### Task 4 - Radial color Animation [2] Complexity Points
 
 *In a masked area, color of the world gradually changes in radial effects.*
 
@@ -91,7 +79,7 @@ It's a good idea to list more points than you need for this so that if your poin
 
 *The player use its long tail to collide with switches to bloom flowers. There will be collision detection for tail parts and switches.*
 
-#### Task 2.1 - Chain Physics [?6?] Complexity Points (not sure the complexity points for this one)
+#### Task 2.1 - Chain Physics [6] Complexity Points
 
 *Two or more "entities" are chained to each other and their movements are being influenced by their connections besides the general effects from velocity and gravity.*
 
@@ -105,4 +93,11 @@ It's a good idea to list more points than you need for this so that if your poin
 
 #### Alternative tasks in case task 1 or task 2 will not be implemented: 
 
+#### Task 1 - Text dialogue popup [3] Complexity Points
+
+*Text dialogue popup. The dialogue will change after mouse clicking it.*
+
+*Conversation between player and the flowers could perform as a guide of gameplay or game narrative.*
+
+#### Others
 *one of memory allocator, sound emitter, audio improvements, wobble animation, debugger outputs, since they are always useful.*
