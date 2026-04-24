@@ -1,6 +1,12 @@
 - Tasks implementing:
 1. Gravity for player
 
+2. static platform
+3. Chain Physics and testing using a flower's stem - week 11
+
+4. Dialogue
+5. Flower animation #1 - week 12
+
 
 
 
