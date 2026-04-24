@@ -23,7 +23,7 @@ namespace EngineCore
             COMP_ACCELERATION = 1 << 2,
             COMP_SIZE = 1 << 3,
             COMP_COLOR = 1 << 4,
-            COMP_STATE = 1 << 5,
+            COMP_STATE = 1 << 5, // for removing entity
             COMP_COLLIDER = 1 << 6,
             COMP_ANIMATION = 1 << 7,
             COMP_SPRITE = 1 << 8,

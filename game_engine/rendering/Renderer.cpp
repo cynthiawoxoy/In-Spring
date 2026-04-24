@@ -46,37 +46,37 @@ namespace Rendering
         double objHeightPx = entity.height() * pxPerGameUnit;
 
 
-        Animation* animation = entity.hasAnimation()
-                                   ? world.animationSystem.getAnimation(entity.animation().animationId)
-                                   : nullptr;
-        Sprite* sprite = entity.hasSprite()
-                             ? spriteManager.getSprite(entity.spriteId())
-                             : nullptr;
+        // Animation* animation = entity.hasAnimation()
+        //                            ? world.animationSystem.getAnimation(entity.animation().animationId)
+        //                            : nullptr;
+        // Sprite* sprite = entity.hasSprite()
+        //                      ? spriteManager.getSprite(entity.spriteId())
+        //                      : nullptr;
 
-        if (sprite)
-        {
-            Rectangle srcRect;
-            if (animation)
-                srcRect = sprite->GetSourceRect(animation->getCurrentFrameIndex(entity.animation().progress));
-            else
-                srcRect = sprite->GetSourceRect();
-            DrawTexturePro(sprite->texture2D, srcRect, Rectangle{
-                               static_cast<float>(objXPx - objWidthPx / 2),
-                               static_cast<float>(objYPx - objHeightPx / 2),
-                               static_cast<float>(objWidthPx),
-                               static_cast<float>(objHeightPx)
-                           },
-                           {},
-                           0,
-                           entity.hasColor() ? std::bit_cast<::Color>(entity.color()) : WHITE);
-        }
-        else
-        {
-            DrawRectangle(static_cast<int>(std::round(objXPx - objWidthPx / 2)),
-                          static_cast<int>(std::round(objYPx - objHeightPx / 2)),
-                          static_cast<int>(std::round(objWidthPx)),
-                          static_cast<int>(std::round(objHeightPx)),
-                          entity.hasColor() ? std::bit_cast<::Color>(entity.color()) : BLACK);
-        }
+    //     if (sprite)
+    //     {
+    //         Rectangle srcRect;
+    //         if (animation)
+    //             srcRect = sprite->GetSourceRect(animation->getCurrentFrameIndex(entity.animation().progress));
+    //         else
+    //             srcRect = sprite->GetSourceRect();
+    //         DrawTexturePro(sprite->texture2D, srcRect, Rectangle{
+    //                            static_cast<float>(objXPx - objWidthPx / 2),
+    //                            static_cast<float>(objYPx - objHeightPx / 2),
+    //                            static_cast<float>(objWidthPx),
+    //                            static_cast<float>(objHeightPx)
+    //                        },
+    //                        {},
+    //                        0,
+    //                        entity.hasColor() ? std::bit_cast<::Color>(entity.color()) : WHITE);
+    //     }
+    //     else
+    //     {
+    DrawRectangle(static_cast<int>(std::round(objXPx - objWidthPx / 2)),
+                  static_cast<int>(std::round(objYPx - objHeightPx / 2)),
+                  static_cast<int>(std::round(objWidthPx)),
+                  static_cast<int>(std::round(objHeightPx)),
+                  entity.hasColor() ? std::bit_cast<::Color>(entity.color()) : BLACK);
+    //     }
     }
 }

@@ -177,3 +177,42 @@ ASSISTANT:
 END OF CHAT HISTORY
 ================================================================
 
+
+[2026-04-24 Chat History]
+User: `final float GRAVITY = -2.0f;` is this correct
+Assistant: Only if your coordinate system treats negative `y` as downward. If `y` increases downward on screen gravity is usually positive; if `y` increases upward gravity is usually negative.
+
+User: cannot resolve symbol fina;
+Assistant: `fina` is a typo; it should be `final`.
+
+User: read Game.h to check
+Assistant: `Game.h` is C++, not Java. `final float GRAVITY = -2.0f;` is invalid in C++; use `constexpr float GRAVITY = -2.0f;` or `const float GRAVITY = -2.0f;`.
+
+User: constexpr vs const
+Assistant: `constexpr` is for compile-time constants and is the better choice for a hardcoded gravity value; `const` is read-only after initialization but can be runtime-initialized.
+
+User: I want to delete anything related to rockArchetype. Why when I shift shift, I only find keywords in Game.h
+Assistant: Found `rockArchetype` usages in `game/Game.cpp` as well. `Shift+Shift` in CLion is Search Everywhere, not the best reference/plain-text finder; `Alt+F7` and `Ctrl+Shift+F` are better.
+
+User: What is a quick way of add all the modified files to git? git add *?
+Assistant: Use `git add -A`.
+
+User: shortcut of switching between tabs in CLion
+Assistant: Common shortcuts are `Alt+Right` / `Alt+Left` and `Ctrl+Tab`, depending on keymap/OS.
+
+User: explain enum syntax
+Assistant: Explained `enum Layers : ColliderLayerId { ... };` as a plain enum with underlying type `ColliderLayerId` and auto-incrementing values.
+
+User: compare the two usages and tell me which is better for my code
+Assistant: Plain `enum` is a better fit for this codebase because engine APIs take raw `ColliderLayerId` values and implicit conversion keeps call sites simpler than `enum class`.
+
+User: Function has 13 parameters, but is called with 14 arguments
+Assistant: Identified the extra trailing `INVALID_SPRITE_ID` argument; `createEntity(...)` only takes 13 parameters.
+
+User: help me debug, I got a seg fault. What's wrong
+Assistant: The likely cause is invalid sprite IDs. `playerRunSpriteSheetId` appears uninitialized before use, and a collider layer value was passed where a `SpriteId` was expected. The renderer dereferences sprite IDs without bounds checks.
+
+User: append the chat history to AI_Chat_History.txt
+Assistant: First write attempt targeted the wrong directory and was rejected. User clarified the parent directory.
+
+

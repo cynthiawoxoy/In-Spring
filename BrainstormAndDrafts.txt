@@ -47,3 +47,11 @@ player -
 flowers - 序列花，绽放花，从无到有出现的柳枝，树枝的新芽
 
 
+
+
+
+
+
+
+-------------- check this later---------------
+- check if I can delete Archetype::COMP_COLOR, COMP_STATE,

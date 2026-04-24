@@ -19,6 +19,13 @@ namespace EngineCore
         EntityId b;
     };
 
+    enum ColliderLayers
+    {
+        LAYER_NONE,
+        LAYER_PLAYER,
+        LAYER_PLATFORMS
+    };
+
     struct CollisionSystem
     {
         static constexpr size_t MAX_COLLISION_LAYER_COUNT = 64;

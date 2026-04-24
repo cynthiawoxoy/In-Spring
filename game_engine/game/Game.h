@@ -21,6 +21,7 @@ namespace Game
 
         Archetype* borderArchetype;
         Archetype* playerArchetype;
+        Archetype* platformArchetype;
 
         SpriteId playerRunSpriteSheetId;
 

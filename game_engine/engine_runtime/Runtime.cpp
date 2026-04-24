@@ -29,13 +29,13 @@ namespace EngineRuntime
             inputManager.update();
             game.onUpdateBegin(world);
             world.kinematicsSystem.update(world);
-            game.onUpdatePostKinematics(world);
-            auto collisions = world.collisionSystem.detect(world);
-            game.onUpdatePostCollisionDetection(world, collisions);
-            world.collisionSystem.resolve(world, collisions);
-            game.onUpdatePostCollisionResolution(world, collisions);
-            world.animationSystem.update(world);
-            world.cleanup();
+            // game.onUpdatePostKinematics(world);
+            // auto collisions = world.collisionSystem.detect(world);
+            // game.onUpdatePostCollisionDetection(world, collisions);
+            // world.collisionSystem.resolve(world, collisions);
+            // game.onUpdatePostCollisionResolution(world, collisions);
+            // world.animationSystem.update(world);
+            // world.cleanup();
 
             auto drawStart = clock::now();
             renderer.draw(frameData, world, lastFrameDrawDurationUs);
