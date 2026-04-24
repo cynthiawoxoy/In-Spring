@@ -11,8 +11,8 @@ namespace Input
     {
         bool moveLeft = false;
         bool moveRight = false;
-        bool standUp = false;
-        bool getDown = false;
+        // bool standUp = false;
+        // bool getDown = false;
 
         bool jump = false;
 

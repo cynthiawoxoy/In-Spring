@@ -11,7 +11,7 @@ namespace Game
 {
     using namespace EngineRuntime;
 
-    float gravity = -2.0f;
+    constexpr float GRAVITY = -2.0f;
 
     struct Game final : IGame
     {
@@ -19,16 +19,11 @@ namespace Game
 
         EntityId playerId;
 
-        // Doesn't need to be here.
         Archetype* borderArchetype;
-        Archetype* rockArchetype;
-        Archetype* animatedSquareArchetype;
         Archetype* playerArchetype;
 
         SpriteId playerRunSpriteSheetId;
-        SpriteId rockSpriteId;
 
-        AnimationId simpleAnimationId;
         AnimationId playerRunAnimationId;
 
         void onStart(World& world) override;
@@ -40,13 +35,6 @@ namespace Game
 
         void onUpdatePlayer(World& world);
 
-        enum Layers : ColliderLayerId
-        {
-            LAYER_NONE,
-            LAYER_PLAYER,
-            LAYER_RED_SQUARES,
-            LAYER_BLUE_SQUARES
-        };
     };
 }
 
