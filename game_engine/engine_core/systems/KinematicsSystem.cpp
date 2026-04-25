@@ -13,6 +13,11 @@ namespace EngineCore
         world.forEach(Archetype::COMP_POSITION | Archetype::COMP_VELOCITY,
                       [&](Entity entity)
                       {
+                          if (entity.hasAcceleration())
+                          {
+                              entity.vx() += entity.ax() * world.frameDt;
+                              entity.vy() += entity.ay() * world.frameDt;
+                          }
                           entity.x() += entity.vx() * world.frameDt;
                           entity.y() += entity.vy() * world.frameDt;
                       });

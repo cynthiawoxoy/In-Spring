@@ -37,6 +37,7 @@ namespace EngineCore
         EntityId createEntity(Archetype* archetype,
                               float x, float y,
                               float vx, float vy,
+                              float ax, float ay,
                               float width, float height,
                               GameColor color,
                               Entity::State state,

@@ -11,7 +11,7 @@ namespace Game
 {
     using namespace EngineRuntime;
 
-    constexpr float GRAVITY = -2.0f;
+    constexpr float GRAVITY = -0.8f;
 
     struct Game final : IGame
     {

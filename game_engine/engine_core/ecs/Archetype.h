@@ -68,6 +68,7 @@ namespace EngineCore
         EntityIndex createEntity(EntityId entityId,
                                  float x, float y,
                                  float vx, float vy,
+                                 float ax, float ay,
                                  float width, float height,
                                  GameColor color,
                                  Entity::State state,

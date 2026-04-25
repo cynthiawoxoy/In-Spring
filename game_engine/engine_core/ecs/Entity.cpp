@@ -11,6 +11,8 @@ namespace EngineCore
     float& Entity::y() { return entityLocation.archetype->y[entityLocation.entityIndex]; }
     float& Entity::vx() { return entityLocation.archetype->vx[entityLocation.entityIndex]; }
     float& Entity::vy() { return entityLocation.archetype->vy[entityLocation.entityIndex]; }
+    float& Entity::ax() { return entityLocation.archetype->ax[entityLocation.entityIndex]; }
+    float& Entity::ay() { return entityLocation.archetype->ay[entityLocation.entityIndex]; }
     float& Entity::width() { return entityLocation.archetype->width[entityLocation.entityIndex]; }
     float& Entity::height() { return entityLocation.archetype->height[entityLocation.entityIndex]; }
     GameColor& Entity::color() { return entityLocation.archetype->color[entityLocation.entityIndex]; }
@@ -26,6 +28,7 @@ namespace EngineCore
     float Entity::top() { return y() + height() / 2; }
     float Entity::bottom() { return y() - height() / 2; }
 
+    bool Entity::hasAcceleration() { return entityLocation.archetype->hasAcceleration(); }
     bool Entity::hasAnimation() { return entityLocation.archetype->hasAnimation(); }
     bool Entity::hasSprite() { return entityLocation.archetype->hasSprite(); }
     bool Entity::hasColor() { return entityLocation.archetype->hasColor(); }

@@ -40,6 +40,7 @@ namespace EngineCore
         float& vy();
 
         // Acceleration
+        float& ax();
         float& ay();
 
         // Size
@@ -64,6 +65,7 @@ namespace EngineCore
 
         bool operator==(const Entity& entity) const = default;
 
+        bool hasAcceleration();
         bool hasAnimation();
         bool hasSprite();
         bool hasColor();

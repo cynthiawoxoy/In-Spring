@@ -15,6 +15,7 @@ namespace EngineCore
         EntityId entityId,
         float x, float y,
         float vx, float vy,
+        float ax, float ay,
         float width, float height,
         GameColor color,
         Entity::State state,
@@ -34,6 +35,12 @@ namespace EngineCore
         {
             this->vx.push_back(vx);
             this->vy.push_back(vy);
+        }
+
+        if (componentMask & COMP_ACCELERATION)
+        {
+            this->ax.push_back(ax);
+            this->ay.push_back(ay);
         }
 
         if (componentMask & COMP_SIZE)

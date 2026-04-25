@@ -23,11 +23,12 @@ namespace Game
         playerArchetype = world.createArchetype(
             Archetype::COMP_POSITION
             | Archetype::COMP_VELOCITY
+            | Archetype::COMP_ACCELERATION
             | Archetype::COMP_SIZE
             | Archetype::COMP_COLLIDER
             | Archetype::COMP_ANIMATION
             | Archetype::COMP_SPRITE);
-        Archetype* platformArchetype = world.createArchetype(
+        platformArchetype = world.createArchetype(
             Archetype::COMP_POSITION
             | Archetype::COMP_SIZE
             | Archetype::COMP_COLLIDER
@@ -49,6 +50,7 @@ namespace Game
          */
 
         playerId = world.createEntity(playerArchetype,
+                                      0, 5,
                                       0, 0,
                                       0, 0,
                                       0.2, 0.2,
@@ -64,6 +66,7 @@ namespace Game
         world.createEntity(borderArchetype,
                            0, 0,
                            0, 0,
+                           0, 0,
                            2, 2,
                            yellow,
                            Entity::STATE_DEFAULT,
@@ -71,6 +74,7 @@ namespace Game
                            {},
                            INVALID_SPRITE_ID);
         world.createEntity(borderArchetype,
+                           0, 0,
                            0, 0,
                            0, 0,
                            1.95, 1.95,
@@ -83,6 +87,7 @@ namespace Game
         for (int i = 1; i < 10; i++)
             world.createEntity(platformArchetype,
                                0, 0, // TODO: change platform positions and locations
+                               0, 0,
                                0, 0,
                                0.35, 0.08,
                                white,
@@ -108,21 +113,24 @@ namespace Game
 
     void Game::onUpdatePostCollisionResolution(World& world, std::vector<Collision>& collisions)
     {
-
+        // update viewPoint for Renderer
+        auto player = world.findEntity(playerId).value();
+        runtime.renderer.viewPointX = player.x();
+        runtime.renderer.viewPointY = player.y();
     }
 
     void Game::onUpdatePlayer(World& world)
     {
         // Input directly affects player velocity.
         Entity player = world.findEntity(playerId).value();
-        player.vx() = 0;
         if (runtime.inputManager.moveLeft)
             player.vx() = -1;
         if (runtime.inputManager.moveRight)
             player.vx() = 1;
 
-        player.vy() = 0;
+        player.ax() = 0;
         // TODO: should I check if player on a platform here?
+        player.ay() = GRAVITY;
 
 
         /*

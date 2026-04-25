@@ -216,3 +216,25 @@ User: append the chat history to AI_Chat_History.txt
 Assistant: First write attempt targeted the wrong directory and was rejected. User clarified the parent directory.
 
 
+
+[2026-04-24 Chat History]
+User: langd: Declaration shadows a field of 'Game::Game' in Game.cpp
+Assistant: Explained that a local declaration was shadowing the `Game::platformArchetype` field and that assigning `this->platformArchetype = ...` avoids the bug.
+
+User: Clangd: Declaration shadows a field of 'EngineCore::Archetype' in Archetype.cpp
+Assistant: Explained that parameters like `color`, `state`, `animationData`, and `spriteId` shadow `Archetype` fields and that renaming parameters is the cleaner fix.
+
+User: I have a segfault. help me debug
+Assistant: Traced the likely crash to accessing `ax/ay` on the player entity when `playerArchetype` did not include `COMP_ACCELERATION`.
+
+User: Fixed. When running it, why the object does not have gravity acceleration, it behaves like const velocity
+Assistant: Pointed out that `player.vy() = 0;` was resetting vertical velocity every frame, preventing gravity from accumulating.
+
+User: check my code, why rendered game is not following player
+Assistant: Found that camera updates were placed in `onUpdatePostCollisionResolution`, but that callback was not being called because the runtime had it commented out.
+
+User: why I cant see the world border in game
+Assistant: Explained that the camera follows the player while the border entities stay at world origin, so the border moves off screen when the player starts high above it.
+
+User: append chat to AIChatHistory.txt
+Assistant: Appended this conversation summary to `AIChatHistory.txt`.
