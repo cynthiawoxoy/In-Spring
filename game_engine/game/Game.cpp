@@ -84,7 +84,7 @@ namespace Game
                            {},
                            INVALID_SPRITE_ID);
 
-        for (int i = 1; i < 10; i++)
+        for (int i = 1; i < 500; i++)
             world.createEntity(platformArchetype,
                                0, 0, // TODO: change platform positions and locations
                                0, 0,

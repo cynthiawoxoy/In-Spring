@@ -23,12 +23,21 @@ namespace EngineRuntime
         initializeTiming(TARGET_FPS);
 
         uint64_t lastFrameDrawDurationUs = 0;
+        auto lastMarkerTime = clock::now();
+        int markerCount = 0;
         while (!WindowShouldClose())
         {
             frameData = frameSync();
             inputManager.update();
             game.onUpdateBegin(world);
+
+            auto kinematicsUpdateStart = clock::now();
             world.kinematicsSystem.update(world);
+            auto kinematicsUpdateEnd = clock::now();
+            std::cout << "kinematics: "
+                      << std::chrono::duration_cast<std::chrono::nanoseconds>(kinematicsUpdateEnd - kinematicsUpdateStart).count()
+                      << " ns\n";
+
             game.onUpdatePostKinematics(world);
             auto collisions = world.collisionSystem.detect(world);
             game.onUpdatePostCollisionDetection(world, collisions);
@@ -52,6 +61,14 @@ namespace EngineRuntime
 
             lastFrameDrawDurationUs =
                 std::chrono::duration_cast<std::chrono::microseconds>(drawEnd - drawStart).count();
+
+            auto now = clock::now();
+            if (std::chrono::duration_cast<std::chrono::seconds>(now - lastMarkerTime).count() >= 10)
+            {
+                markerCount++;
+                std::cout << "--- " << (markerCount * 10) << " s elapsed ---\n";
+                lastMarkerTime = now;
+            }
         }
 
         stopTiming();
