@@ -238,3 +238,100 @@ Assistant: Explained that the camera follows the player while the border entitie
 
 User: append chat to AIChatHistory.txt
 Assistant: Appended this conversation summary to `AIChatHistory.txt`.
+
+❯ I'm implementing a game project. How should I use git to organize tasks and features?
+
+⏺ For a game project built on a hw skeleton, here's a clean approach:
+
+  Branch strategy
+  - main — always buildable, only merge when a feature is complete
+  - dev — integration branch, merge features here first
+  - feature/<name> — one branch per feature (e.g. feature/player-movement, feature/collision-layers)
+
+  Commit discipline
+  - One logical change per commit — "add gravity to kinematics" not "misc changes"
+  - Commit when it compiles and the feature works, not every save
+  - Prefix messages: feat:, fix:, refactor:, chore: (e.g. feat: add player jump with coyote time)
+
+  For a hw-based project specifically
+  - First commit: gut the .cpp files to stubs — chore: strip hw implementations to stubs
+  - Tag that commit so you always have a clean rollback point: git tag skeleton
+
+  Practical task flow
+  1. Cut a branch: git checkout -b feature/enemy-ai
+  2. Work, commit incrementally
+  3. Merge to dev, verify it integrates, then merge dev → main
+
+  What to put in .gitignore
+  cmake-build-debug/
+  cmake-build-release/
+  .idea/
+  *.o
+
+  The .idea/ folder and build dirs are already in your repo — worth cleaning those out early before history gets long.
+
+❯ what is difference between feature/name and dev?
+
+⏺ dev is an integration branch — it's where you verify that multiple features work together before promoting to main.
+
+  feature/<name> is isolated work — you don't know yet if it breaks other things.
+
+  Flow:
+  feature/player-movement  ──┐
+  feature/collision-layers  ─┼──► dev ──► main
+  feature/enemy-ai          ──┘
+
+  Concrete example of why it matters:
+  - feature/player-movement and feature/collision-layers each work fine alone
+  - But when merged together, the player clips through walls — that bug shows up on dev
+  - You fix it on dev (or back on a feature branch) before it ever reaches main
+
+  For a solo project, dev is optional overhead — you can merge features directly to main and just be disciplined about only merging working code. Most solo game projects skip dev entirely and it's fine.
+
+  The rule of thumb: add dev when you have multiple features in flight at the same time and want a place to shake out integration issues before main.
+
+❯ explain tag the commit
+
+⏺ git tag gives a named, permanent pointer to a specific commit — unlike a branch, it doesn't move.
+
+  Creating a tag:
+  git tag skeleton          # lightweight tag on current commit
+  git tag -a skeleton -m "hw skeleton stripped to stubs"  # annotated, with message
+
+  Why tag your skeleton commit:
+  If you've been working for weeks and something breaks badly, you can instantly get back to the clean starting point:
+  git checkout skeleton     # look at the state at that tag
+  git diff skeleton         # see everything you've changed since
+  git checkout skeleton -- engine_core/systems/KinematicsSystem.cpp  # restore one file
+
+  Other useful tags for a game project:
+  git tag v0.1-playable     # first time the game is actually runnable
+  git tag submission        # what you turned in
+
+  Listing and using tags:
+  git tag                   # list all tags
+  git show skeleton         # inspect the tagged commit
+
+  The key difference from a branch: a branch tip moves forward with every commit, a tag always points to the same commit forever. Think of it as a bookmark in history.
+
+❯ After a feature is done, do I need to do anything to that branch?
+
+⏺ Yes, delete it once it's merged. The branch has served its purpose.
+
+  # delete locally
+  git branch -d feature/player-movement
+
+  # delete on remote (if you pushed it)
+  git push origin --delete feature/player-movement
+
+  -d (lowercase) is safe — it refuses to delete if the branch isn't merged yet. Use -D only if you're sure you want to force-delete unmerged work.
+
+  Why bother deleting:
+  - Branch list stays clean — 20 dead branches makes git branch noisy
+  - No confusion about what's active vs done
+  - Merged code lives in main/dev history, nothing is lost
+
+  A common workflow is to delete the branch right after the merge:
+  git checkout dev
+  git merge feature/player-movement
+  git branch -d feature/player-movement

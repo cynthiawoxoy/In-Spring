@@ -105,3 +105,9 @@ It's a good idea to list more points than you need for this so that if your poin
 
 #### Others
 *one of memory allocator, sound emitter, audio improvements, wobble animation, debugger outputs, since they are always useful.*
+
+## Progress Tracking
+
+### Game Tasks
+
+*1. Implement gravity*
