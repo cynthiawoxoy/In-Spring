@@ -110,4 +110,4 @@ It's a good idea to list more points than you need for this so that if your poin
 
 ### Game Tasks
 
-*1. Implement gravity*
+*1. Remove redundant code and implement gravity - 3.5 hrs*
