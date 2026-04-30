@@ -121,6 +121,8 @@ namespace Game
 
     void Game::onUpdatePlayer(World& world)
     {
+
+
         // Input directly affects player velocity.
         Entity player = world.findEntity(playerId).value();
         if (runtime.inputManager.moveLeft)
@@ -128,9 +130,14 @@ namespace Game
         if (runtime.inputManager.moveRight)
             player.vx() = 1;
 
-        player.ax() = 0;
-        // TODO: should I check if player on a platform here?
-        player.ay() = GRAVITY;
+        // if (runtime.inputManager.jump)
+        // {
+        //
+        // }
+
+            player.ay() = GRAVITY;
+
+        }
 
 
         /*
@@ -140,10 +147,5 @@ namespace Game
             // TODO: get down
         */
 
-
-        if (runtime.inputManager.jump)
-        {
-
-        }
     }
 }

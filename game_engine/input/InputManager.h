@@ -13,7 +13,6 @@ namespace Input
         bool moveRight = false;
         // bool standUp = false;
         // bool getDown = false;
-
         bool jump = false;
 
         void update();

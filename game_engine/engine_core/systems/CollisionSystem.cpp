@@ -19,7 +19,7 @@ namespace EngineCore
     {
         std::vector<Collision> collisions;
 
-        // Array of layers, where every array is a vector of entities
+        // Array of layers, where every array is a vector of entities. Set up entities in corresponding layers
         std::vector<Entity> colliderEntities[MAX_COLLISION_LAYER_COUNT];
         world.forEach(Archetype::COMP_POSITION | Archetype::COMP_SIZE | Archetype::COMP_COLLIDER,
                       [&colliderEntities](Entity entity)

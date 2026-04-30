@@ -18,6 +18,8 @@ namespace Game
         Runtime runtime;
 
         EntityId playerId;
+        bool playerGrounded = false; // for skipping player-platform collision detection
+        EntityId currPlatformId;
 
         Archetype* borderArchetype;
         Archetype* playerArchetype;
@@ -34,6 +36,7 @@ namespace Game
         void onUpdatePostCollisionResolution(World& world, std::vector<Collision>& vector) override;
         int run();
 
+        // simple location, velocity updates
         void onUpdatePlayer(World& world);
 
     };

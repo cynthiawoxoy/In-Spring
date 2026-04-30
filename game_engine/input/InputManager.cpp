@@ -12,9 +12,9 @@ namespace Input
     {
         this->moveLeft = IsKeyDown(KEY_LEFT);
         this->moveRight = IsKeyDown(KEY_RIGHT);
-        // this->getDown = IsKeyDown(KEY_DOWN);
-        // this->standUp = IsKeyDown(KEY_UP);
+        // this->getDown = IsKeyDown(KEY_SPACE);
+        // this->standUp = IsKeyDown(KEY_SPACE);
 
-        this->jump = IsKeyPressed(KEY_SPACE);
+        this->jump = IsKeyPressed(KEY_UP);
     }
 }

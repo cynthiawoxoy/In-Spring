@@ -1,34 +1,80 @@
-- Tasks implementing:
-1. Gravity for player - DONE
+#### Tasks implementing order:
+# 1.1 Gravity for player - DONE
+# 1.2 Player's inputManager
+    A general jump only edit vy but not vx. if jump, need to clear playerGrounded and currPlatform state
 
-2.1 static platform
-2.2 Art assets
+# 2.1 static platform
+optional: down-jump
 
-3.1 Chain Physics and testing using a flower's stem
-3.2 Create world map - game
-
-4. Dialogue
-5. Flower animation #1
-
-
-s
+only resolve collision if the player was above the platform surface last frame and is moving downward.
+Per-frame logic
 
 
+  before applying velocity:
+      prev_bottom = player.y - player.height   # feet position last frame. Need to check origin
+
+  apply gravity and velocity:
+      player.vel.y += gravity * dt
+      player.y     += player.vel.y * dt
+
+  for each platform:
+      if not overlapping(player, platform): continue
+
+      # The two conditions that must both be true to block
+      coming_from_above = prev_bottom >= platform.top
+      moving_downward   = player.vel.y <= 0
+
+      if coming_from_above and moving_downward:
+          player.y       = platform.top + player.height   # snap feet to surface
+          player.vel.y   = 0
+          player.grounded = true
+
+skip collision check while player grounded:
+    if player.grounded:
+          p = player.current_platform
+          if player.right < p.left or player.left > p.right:
+              player.grounded = false   # walked off the edge
+              player.current_platform = null
+          # no further collision checks needed this frame
+    else:
+          # do full sweep to find a landing (for each platform...)
+
+# (optional) 2.1.1 jump down
+down jump. Stand up for dialogue. charged jump: jump change vx as well, and this happens when space key is long
+pressed and player's animation is changed. A general jump only change vy but not vx.
+
+# (optional) 2.1.2 playerGrounded optimization
+When platform grounded, there are redundant calculation due to kinematic update from gravity and reset player's position
+back to top of platform. Maybe I can try optimizing this by creating two archetype, one has acceleration and another does
+not, and switch between them when grounded and ungrounded.
+
+# 2.2 Art assets
+
+# 3.1 Chain Physics and testing using a flower's stem
+# 3.2 Create world map - game
+# 3.3 Render player and platforms
+
+# 4. Dialogue
+# 5. Flower animation
 
 
+
+
+
+
+#### Other functions
 - inputs
 key left / right - turning directions
 key space - jump
 (key up - standing up? and a dialog?)
 
 - game
-gravity
-border of the world - or a big map
 
 
 
 
-- art style
+
+#### art style
 清冷的初春 - 迷茫 - 微雨？-> 温暖
 低饱和度蓝绿 -> 高饱和度绿
 
@@ -58,3 +104,14 @@ flowers - 序列花，绽放花，从无到有出现的柳枝，树枝的新芽
 
 -------------- check this later---------------
 - check if I can delete Archetype::COMP_COLOR, COMP_STATE,
+
+
+
+
+CLion shortcuts
+
+Switch between files/tabs:
+- Switcher: Ctrl+Tab (hold Ctrl, press Tab; use Tab / Shift+Tab to move)
+- Recent Files: ⌘E
+- Recent Edited Files: ⌘⇧E
+
