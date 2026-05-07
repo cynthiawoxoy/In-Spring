@@ -45,6 +45,7 @@ namespace Game
 
         // simple location, velocity updates
         void onUpdatePlayer(World& world);
+        void createPlatforms(World& world);
 
         const bool isPlayerGrounded() const { return latchedToPlatform != INVALID_ENTITY_ID; }
 

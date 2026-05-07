@@ -1955,3 +1955,34 @@ Tail.cpp includes Game.h to access GRAVITY — this works but creates a dependen
 
   ---
   Recommendation: Option A. A GameConstants.h with all game-wide constants (GRAVITY, PLAYER_JUMP_VELOCITY, PLAYER_MOVEMENT_SPEED) is clean, obvious, and scales well as the game grows. Both Game.h and Tail.h just include it with no coupling between them.
+
+  ***** Planning for triggering flowers
+  ❯ I want to create some flower trigger, and player's tail should be able to collide with the trigger. Trigger is off by default, and if the last point (away from root) of the tail collide with trigger, the bool will be on, and this will trigger play of animation of
+    some flowers. The flowers are created by petals, and its animation is simply rotation of petals. Outline what I should do
+
+  ⏺ Flower Trigger Feature — Implementation Outline
+
+    ---
+    1. Trigger data structure
+    - Add FlowerTrigger struct: position, radius, bool activated
+    - Add std::vector<FlowerTrigger> flowerTriggers to Game.h
+    - Add trigger positions in onStart
+
+    2. Tail-trigger collision
+    - Each frame in onUpdatePostKinematics (after tail.update): check if tail's last point (tailPoints[TAIL_POINT_COUNT-1]) is within trigger radius
+    - If collision: set trigger.activated = true
+
+    3. Flower + petal data structure
+    - Each FlowerTrigger owns a flower: center position + N petals
+    - Each petal: offset angle, distance from center, size
+    - Add float rotationAngle to track current rotation state
+
+    4. Flower animation
+    - In onUpdatePostKinematics: if trigger.activated, increment rotationAngle each frame
+    - Decide on rotation speed constant in GameConstant.h
+    - Optionally: stop rotating after one full revolution, or loop forever
+
+    5. Rendering
+    - In onDraw: draw each trigger's flower if activated
+    - Each petal drawn as a small ellipse/rectangle rotated around the flower center using rotationAngle
+    - Draw trigger boundary as a circle (debug only, can remove later)

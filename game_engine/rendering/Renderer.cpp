@@ -45,6 +45,7 @@ namespace Rendering
         float objWidthPx = entity.width()  * pxPerGameUnit;
         float objHeightPx = entity.height() * pxPerGameUnit;
 
+        // TODO: DELETE ME
         // Animation* animation = entity.hasAnimation()
         //                            ? world.animationSystem.getAnimation(entity.animation().animationId)
         //                            : nullptr;

@@ -42,6 +42,8 @@ namespace EngineCore
     constexpr GameColor blank{0, 0, 0, 0};
     constexpr GameColor magenta{255, 0, 255, 255};
     constexpr GameColor rayWhite{245, 245, 245, 255};
+
+    constexpr GameColor grassGreen{120, 156, 138, 255};
 }
 
 #endif //ENGINE_CORE_COLOR_H

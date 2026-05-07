@@ -16,8 +16,9 @@ namespace Game
         }
     }
 
-    void Tail::update(float anchorX, float anchorY, float dt)
+    void Tail::update(float anchorX, float anchorY, float dt, bool isPlayerGrounded)
     {
+        float tailGravity = isPlayerGrounded? LATCH_TAIL_GRAVITY : UNLATCH_TAIL_GRAVITY;
         // Pin point 0 to anchor
         tailPoints[0].prevX = tailPoints[0].x;
         tailPoints[0].prevY = tailPoints[0].y;
@@ -32,7 +33,7 @@ namespace Game
         for (int i = 1; i < TAIL_POINT_COUNT; i++)
         {
             float newX = 2 * tailPoints[i].x - tailPoints[i].prevX;
-            float newY = 2 * tailPoints[i].y - tailPoints[i].prevY + TAIL_GRAVITY * dt * dt;
+            float newY = 2 * tailPoints[i].y - tailPoints[i].prevY + tailGravity * dt * dt;
             tailPoints[i].prevX = tailPoints[i].x;
             tailPoints[i].prevY = tailPoints[i].y;
             tailPoints[i].x = newX;

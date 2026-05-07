@@ -36,6 +36,7 @@ namespace Game
         platformArchetype = world.createArchetype(
             Archetype::COMP_POSITION
             | Archetype::COMP_SIZE
+            | Archetype::COMP_COLOR
             | Archetype::COMP_COLLIDER
             | Archetype::COMP_SPRITE);
 
@@ -55,10 +56,11 @@ namespace Game
          */
 
         playerId = world.createEntity(playerArchetype,
-                                      0, 5,
+                                      START_POSITION_X + PLAYER_WIDTH / 2,
+                                      START_POSITION_Y + PLATFORM_HEIGHT + PLAYER_HEIGHT,
                                       0, 0,
                                       0, 0,
-                                      0.2, 0.2,
+                                      PLAYER_WIDTH, PLAYER_HEIGHT,
                                       white,
                                       Entity::STATE_DEFAULT,
                                       ColliderShape::RECT,
@@ -94,18 +96,7 @@ namespace Game
                            {},
                            INVALID_SPRITE_ID);
 
-        for (int i = 1; i < 10; i++)
-            world.createEntity(platformArchetype,
-                               0, 0, // TODO: change platform positions and locations
-                               0, 0,
-                               0, 0,
-                               0.35, 0.08,
-                               white,
-                               Entity::STATE_DEFAULT,
-                               ColliderShape::RECT,
-                               LAYER_PLATFORMS,
-                               {},
-                               INVALID_SPRITE_ID);
+        createPlatforms(world);
     }
 
     void Game::onUpdateBegin(World& world)
@@ -117,7 +108,7 @@ namespace Game
     void Game::onUpdatePostKinematics(World& world)
     {
         Entity player = world.findEntity(playerId).value();
-        tail.update(player.x(), player.bottom(), world.frameDt);
+        tail.update(player.x(), player.bottom(), world.frameDt, isPlayerGrounded());
     }
 
     void Game::onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions)
@@ -223,7 +214,8 @@ namespace Game
         {
             // check is player unlatched
             Entity platform = world.findEntity(latchedToPlatform).value();
-            if (player.x() < platform.left() || player.x() > platform.right()) { latchedToPlatform = INVALID_ENTITY_ID; }
+            if (player.right() < platform.left() || player.left() > platform.right())
+                latchedToPlatform = INVALID_ENTITY_ID;
         }
 
         if (runtime.inputManager.jump && isPlayerGrounded())
@@ -255,5 +247,94 @@ namespace Game
             // TODO: get down
         */
 
+    }
+
+    void Game::createPlatforms(World& world)
+    {
+        // check writeup for platform planning and its grid numbers
+        GameColor platformColor = grassGreen;
+        // Grid 1, 2
+        world.createEntity(platformArchetype,
+                               START_POSITION_X + PLATFORM_GRID_LENGTH * 2,
+                               START_POSITION_Y,
+                               0, 0,
+                               0, 0,
+                               PLATFORM_WIDTH * 2, PLATFORM_HEIGHT,
+                               platformColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::RECT,
+                               LAYER_PLATFORMS,
+                               {},
+                               INVALID_SPRITE_ID);
+
+        // Grid 3
+        world.createEntity(platformArchetype,
+                               START_POSITION_X + PLATFORM_GRID_LENGTH * 7,
+                               START_POSITION_Y + PLATFORM_GRID_LENGTH / 2,
+                               0, 0,
+                               0, 0,
+                               PLATFORM_WIDTH, PLATFORM_HEIGHT,
+                               platformColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::RECT,
+                               LAYER_PLATFORMS,
+                               {},
+                               INVALID_SPRITE_ID);
+
+        // Grid 4
+        world.createEntity(platformArchetype,
+                               START_POSITION_X + PLATFORM_GRID_LENGTH * 9,
+                               START_POSITION_Y + PLATFORM_GRID_LENGTH * -4,
+                               0, 0,
+                               0, 0,
+                               PLATFORM_WIDTH, PLATFORM_HEIGHT,
+                               platformColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::RECT,
+                               LAYER_PLATFORMS,
+                               {},
+                               INVALID_SPRITE_ID);
+
+        // Grid 5
+        world.createEntity(platformArchetype,
+                               START_POSITION_X + PLATFORM_GRID_LENGTH * 11.5,
+                               START_POSITION_Y + PLATFORM_GRID_LENGTH * -4.5,
+                               0, 0,
+                               0, 0,
+                               PLATFORM_WIDTH, PLATFORM_HEIGHT,
+                               platformColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::RECT,
+                               LAYER_PLATFORMS,
+                               {},
+                               INVALID_SPRITE_ID);
+
+        // Grid 6
+        world.createEntity(platformArchetype,
+                               START_POSITION_X + PLATFORM_GRID_LENGTH * 14,
+                               START_POSITION_Y + PLATFORM_GRID_LENGTH * -5,
+                               0, 0,
+                               0, 0,
+                               PLATFORM_WIDTH, PLATFORM_HEIGHT,
+                               platformColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::RECT,
+                               LAYER_PLATFORMS,
+                               {},
+                               INVALID_SPRITE_ID);
+
+        // Grid 7
+        world.createEntity(platformArchetype,
+                               START_POSITION_X + PLATFORM_GRID_LENGTH * 17.5,
+                               START_POSITION_Y + PLATFORM_GRID_LENGTH * -4.1,
+                               0, 0,
+                               0, 0,
+                               PLATFORM_WIDTH, PLATFORM_HEIGHT,
+                               platformColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::RECT,
+                               LAYER_PLATFORMS,
+                               {},
+                               INVALID_SPRITE_ID);
     }
 }
