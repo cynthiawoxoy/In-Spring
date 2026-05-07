@@ -30,7 +30,16 @@ namespace EngineRuntime
             game.onUpdateBegin(world);
             world.kinematicsSystem.update(world);
             game.onUpdatePostKinematics(world);
-            auto collisions = world.collisionSystem.detect(world);
+            auto collisions = world.collisionSystem.detect(
+                world,
+                [&](Entity& entityA, Entity& entityB)
+                {
+                    return game.skipLayerLevelCollisionDetection(entityA, entityB);
+                },
+                [&](Entity& entityA, Entity& entityB)
+                {
+                    return game.skipEntityLevelCollisionDetection(entityA, entityB);
+                } );
             game.onUpdatePostCollisionDetection(world, collisions);
             world.collisionSystem.resolve(world, collisions);
             game.onUpdatePostCollisionResolution(world, collisions);

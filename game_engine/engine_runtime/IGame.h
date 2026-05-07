@@ -19,6 +19,9 @@ namespace EngineRuntime
         virtual void onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions) = 0;
         virtual void onUpdatePostCollisionResolution(World& world, std::vector<Collision>& collisions) = 0;
 
+        virtual bool skipLayerLevelCollisionDetection(Entity& entityA, Entity& entityB) { return false; }
+        virtual bool skipEntityLevelCollisionDetection(Entity& entityA, Entity& entityB) { return false; }
+
         virtual ~IGame() = default;
     };
 }

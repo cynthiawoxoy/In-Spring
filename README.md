@@ -112,8 +112,13 @@ It's a good idea to list more points than you need for this so that if your poin
 
 #### 1. Remove redundant code and implement gravity - 3.5 hrs
 
-#### 2. Platform implementation
+#### 2. Platform implementation - 11 hrs
 
 - If playerGrounded, skip collision detection between player and all the platforms. Challenge: If using playerGround state to condition skipping of detection, Game is exposed to GameEngine.
 - A big optimization on collision detection is done by skip player-platforms detection when playerGrounded. 
 - But there are unnecessary calculations: if playerGrounded, there will be a general player-position-update due to gravity in onUpdateBegin() in every frame, and then player's position will be set back to original position at starting of the frame later on. This is because regular update happens first, and skipping happens later per frame. I was thinking of how to skip regular update on gravity if the beginning. Thought about ways to skip regular update by adding if conditions, or adding a STATE and switch STATE for player, or create two archetypes and switch assigned archetypes to player. But then realized I should implement the simplest functionality first, and this optimization could be trivial. 3hrs. 
+- tried to add a filter function in iGame but realized that Engine_core has no access to Game. It has the layer of Engine_runtime in between. So instead, pass lambda as a parameter into collision detection. Spent quite some time on learning lambda and how it passes parameters over two architect layers. 
+- I want the platform to be one-way on collision: player can jump from bottom to top. So after finding collisions pairs in detect(), I could remove pairs in the case player is jumping from down to top in onUpdatePostCollisionDetection, but it requires another round of search. So instead, I added another condition of skipEntityLevelCollisionCheck(entityA, entityB)) to discard the collision pair during detect() for better performance. 
+- debug skipEntityLevelCollisionDetection
+
+#### 3. Chain physics. See writeup for the rest

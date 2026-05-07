@@ -69,6 +69,7 @@ namespace EngineCore
         bool hasAnimation();
         bool hasSprite();
         bool hasColor();
+        bool hasState();
     };
 
     Entity::State operator|(Entity::State lhs, Entity::State rhs);

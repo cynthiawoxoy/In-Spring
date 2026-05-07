@@ -32,6 +32,7 @@ namespace EngineCore
     bool Entity::hasAnimation() { return entityLocation.archetype->hasAnimation(); }
     bool Entity::hasSprite() { return entityLocation.archetype->hasSprite(); }
     bool Entity::hasColor() { return entityLocation.archetype->hasColor(); }
+    bool Entity::hasState() { return entityLocation.archetype->hasState(); }
 
     Entity::State operator|(Entity::State lhs, Entity::State rhs)
     {

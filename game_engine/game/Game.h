@@ -12,14 +12,16 @@ namespace Game
     using namespace EngineRuntime;
 
     constexpr float GRAVITY = -0.8f;
+    constexpr float PLAYER_JUMP_VELOCITY = 0.2f;
+    constexpr float PLAYER_MOVEMENT_SPEED = 0.4f;
 
     struct Game final : IGame
     {
         Runtime runtime;
 
         EntityId playerId;
-        bool playerGrounded = false; // for skipping player-platform collision detection
-        EntityId currPlatformId;
+        float playerPrevBottom;
+        EntityId latchedToPlatform = INVALID_ENTITY_ID;
 
         Archetype* borderArchetype;
         Archetype* playerArchetype;
@@ -32,6 +34,9 @@ namespace Game
         void onStart(World& world) override;
         void onUpdateBegin(World& world) override;
         void onUpdatePostKinematics(World& world) override;
+        // if collision detect between two layers should be skipped, function return true
+        bool skipLayerLevelCollisionDetection(Entity& entityA, Entity& entityB) override;
+        bool skipEntityLevelCollisionDetection(Entity& entityA, Entity& entityB) override;
         void onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions) override;
         void onUpdatePostCollisionResolution(World& world, std::vector<Collision>& vector) override;
         int run();
@@ -39,6 +44,14 @@ namespace Game
         // simple location, velocity updates
         void onUpdatePlayer(World& world);
 
+        const bool isPlayerGrounded() const { return latchedToPlatform != INVALID_ENTITY_ID; }
+
+        enum Layers : ColliderLayerId
+        {
+            LAYER_NONE,
+            LAYER_PLAYER,
+            LAYER_PLATFORMS
+        };
     };
 }
 

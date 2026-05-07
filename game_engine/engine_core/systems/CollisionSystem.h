@@ -5,6 +5,7 @@
 #ifndef ENGINE_CORE_COLLISIONSYSTEM_H
 #define ENGINE_CORE_COLLISIONSYSTEM_H
 #include <vector>
+#include <functional>
 
 #include "../ecs/ECSTypes.h"
 
@@ -32,7 +33,10 @@ namespace EngineCore
 
         void enableCollisions(ColliderLayerId a, ColliderLayerId b, bool enabled);
 
-        std::vector<Collision> detect(World& world);
+        std::vector<Collision> detect(World& world,
+                                    std::function<bool(Entity&, Entity&)> skipLayerLevel,
+                                    std::function<bool(Entity&, Entity&)> skipEntityLevel);
+
         void resolve(World& world, std::vector<Collision>& collisions);
 
     private:

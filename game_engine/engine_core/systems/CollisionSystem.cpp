@@ -15,60 +15,67 @@ namespace EngineCore
         permittedLayerCollisions[b][a] = enabled;
     }
 
-    std::vector<Collision> CollisionSystem::detect(World& world)
-    {
-        std::vector<Collision> collisions;
-
-        // Array of layers, where every array is a vector of entities. Set up entities in corresponding layers
-        std::vector<Entity> colliderEntities[MAX_COLLISION_LAYER_COUNT];
-        world.forEach(Archetype::COMP_POSITION | Archetype::COMP_SIZE | Archetype::COMP_COLLIDER,
-                      [&colliderEntities](Entity entity)
-                      {
-                          colliderEntities[entity.colliderLayerId()].push_back(entity);
-                      });
-
-        for (ColliderLayerId layerAId = 0; layerAId < MAX_COLLISION_LAYER_COUNT; layerAId++)
+    std::vector<Collision> CollisionSystem::detect(World& world,
+            // LayerLevelFilter skipLayerLevelCollisionDetection, EntityLevelFilter skipEntityLevelCollisionDetection)
+            std::function<bool(Entity&, Entity&)> skipLayerLevel, std::function<bool(Entity&, Entity&)> skipEntityLevel)
         {
-            for (ColliderLayerId layerBId = 0; layerBId < MAX_COLLISION_LAYER_COUNT; layerBId++)
+            std::vector<Collision> collisions;
+
+            // Array of layers, where every array is a vector of entities. Set up entities in corresponding layers
+            std::vector<Entity> colliderEntities[MAX_COLLISION_LAYER_COUNT];
+            world.forEach(Archetype::COMP_POSITION | Archetype::COMP_SIZE | Archetype::COMP_COLLIDER,
+                          [&colliderEntities](Entity entity)
+                          {
+                              colliderEntities[entity.colliderLayerId()].push_back(entity);
+                          });
+
+            for (ColliderLayerId layerAId = 0; layerAId < MAX_COLLISION_LAYER_COUNT; layerAId++)
             {
-                // Skip <b,a> since we already checked <a,b>.
-                if (layerBId > layerAId)
-                    break;
-                if (!permittedLayerCollisions[layerAId][layerBId])
-                    continue;
-
-                auto& layerA = colliderEntities[layerAId];
-                auto& layerB = colliderEntities[layerBId];
-
-                for (size_t a = 0; a < colliderEntities[layerAId].size(); a++)
+                for (ColliderLayerId layerBId = 0; layerBId < MAX_COLLISION_LAYER_COUNT; layerBId++)
                 {
-                    for (size_t b = 0; b < colliderEntities[layerBId].size(); b++)
+                    // Skip <b,a> since we already checked <a,b>.
+                    if (layerBId > layerAId)
+                        break;
+                    if (!permittedLayerCollisions[layerAId][layerBId])
+                        continue;
+
+                    auto& layerA = colliderEntities[layerAId];
+                    auto& layerB = colliderEntities[layerBId];
+
+                    if (layerA.empty() || layerB.empty()) continue;
+                    if (skipLayerLevel(layerA[0], layerB[0])) continue;
+
+                    for (size_t a = 0; a < colliderEntities[layerAId].size(); a++)
                     {
-                        if (layerAId == layerBId && b >= a)
-                            break;
-
-                        auto& entityA = layerA[a];
-                        auto& entityB = layerB[b];
-
-                        // Check whether AABBs overlap.
-                        // Note that these checks shouldn't be expected to have great cache locality. That's unavoidable
-                        // because we don't organize our entity data spatially.
-                        if (entityA.right() < entityB.left() ||
-                            entityA.left() > entityB.right() ||
-                            entityA.top() < entityB.bottom() ||
-                            entityA.bottom() > entityB.top())
+                        for (size_t b = 0; b < colliderEntities[layerBId].size(); b++)
                         {
-                            continue;
-                        }
+                            if (layerAId == layerBId && b >= a)
+                                break;
 
-                        collisions.push_back(Collision{entityA.id(), entityB.id()});
+                            auto& entityA = layerA[a];
+                            auto& entityB = layerB[b];
+
+                            // Check whether AABBs overlap.
+                            // Note that these checks shouldn't be expected to have great cache locality. That's unavoidable
+                            // because we don't organize our entity data spatially.
+                            if (entityA.right() < entityB.left() ||
+                                entityA.left() > entityB.right() ||
+                                entityA.top() < entityB.bottom() ||
+                                entityA.bottom() > entityB.top())
+                            {
+                                continue;
+                            }
+
+                            if (skipEntityLevel(entityA, entityB)) continue;
+
+                            collisions.push_back(Collision{entityA.id(), entityB.id()});
+                        }
                     }
                 }
             }
-        }
 
-        return collisions;
-    }
+            return collisions;
+        }
 
     void CollisionSystem::resolve(World& world, std::vector<Collision>& collisions)
     {
@@ -81,8 +88,18 @@ namespace EngineCore
 
             auto& a = optA.value();
             auto& b = optB.value();
-            if (a.state() & Entity::STATE_DESTROYED || b.state() & Entity::STATE_DESTROYED)
-                continue;
+            if (a.hasState() && a.state() & Entity::STATE_DESTROYED) continue;
+            if (b.hasState() && b.state() & Entity::STATE_DESTROYED) continue;
+
+            // player-platform: set player to platform top
+            if ((a.colliderLayerId() == LAYER_PLAYER && b.colliderLayerId() == LAYER_PLATFORMS) ||
+                (b.colliderLayerId() == LAYER_PLAYER && a.colliderLayerId() == LAYER_PLATFORMS))
+            {
+                Entity& player = a.colliderLayerId() == LAYER_PLAYER ? a : b;
+                Entity& platform = a.colliderLayerId() == LAYER_PLAYER ? b : a;
+                player.y() = platform.top() + player.height() / 2;
+                return;
+            }
 
             separate(a, b);
         }
