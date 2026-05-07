@@ -47,7 +47,8 @@ namespace EngineRuntime
             world.cleanup();
 
             auto drawStart = clock::now();
-            renderer.draw(frameData, world, lastFrameDrawDurationUs);
+            renderer.draw(frameData, world, lastFrameDrawDurationUs,
+                [&]() { game.onDraw(); });
             auto drawEnd = clock::now();
 
             if (frameData.workDurationUs > 16'666)

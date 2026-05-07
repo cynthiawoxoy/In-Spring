@@ -121,4 +121,4 @@ It's a good idea to list more points than you need for this so that if your poin
 - I want the platform to be one-way on collision: player can jump from bottom to top. So after finding collisions pairs in detect(), I could remove pairs in the case player is jumping from down to top in onUpdatePostCollisionDetection, but it requires another round of search. So instead, I added another condition of skipEntityLevelCollisionCheck(entityA, entityB)) to discard the collision pair during detect() for better performance. 
 - debug skipEntityLevelCollisionDetection
 
-#### 3. Chain physics. See writeup for the rest
+#### 3. Chain physics. See writeup for the rest - 9+ hours

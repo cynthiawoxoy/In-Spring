@@ -9,8 +9,16 @@
 
 namespace Rendering
 {
-    void Renderer::draw(FrameData& frameData, World& world, uint64_t drawDurationUs)
+    void Renderer::draw(FrameData& frameData, World& world, uint64_t drawDurationUs,
+        std::function<void()> onCustomDraw)
     {
+        float windowWidthPx  = static_cast<float>(GetScreenWidth());
+        float windowHeightPx = static_cast<float>(GetScreenHeight());
+        float minDim = std::min(windowWidthPx, windowHeightPx);
+        pxPerGameUnit = minDim / 2;
+        originXPx = windowWidthPx / 2;
+        originYPx = windowHeightPx / 2;
+
         BeginDrawing();
         // TODO Parameterize
         ClearBackground(::RAYWHITE);
@@ -22,6 +30,8 @@ namespace Rendering
                           drawEntity(entity, world);
                       });
 
+        if (onCustomDraw) onCustomDraw(); // for tail rendering
+
         DrawText(TextFormat("FPS %f\nJitter: %lld us\nWork: %lld us\nDraw: %lld us", frameData.fps, frameData.jitterUs,
                             frameData.workDurationUs, drawDurationUs), 0, 0, 36, ::GRAY);
 
@@ -30,21 +40,10 @@ namespace Rendering
 
     void Renderer::drawEntity(Entity entity, World& world)
     {
-        double windowWidthPx = GetScreenWidth();
-        double windowHeightPx = GetScreenHeight();
-
-        double minDim = std::min(windowWidthPx, windowHeightPx);
-        double pxPerGameUnit = minDim / 2;
-
-        double originXPx = windowWidthPx / 2;
-        double originYPx = windowHeightPx / 2;
-
-        double objXPx = originXPx + (entity.x() - viewPointX) * pxPerGameUnit;
-        double objYPx = originYPx - (entity.y() - viewPointY) * pxPerGameUnit;
-
-        double objWidthPx = entity.width() * pxPerGameUnit;
-        double objHeightPx = entity.height() * pxPerGameUnit;
-
+        float objXPx = originXPx + (entity.x() - viewPointX) * pxPerGameUnit;
+        float objYPx = originYPx - (entity.y() - viewPointY) * pxPerGameUnit;
+        float objWidthPx = entity.width()  * pxPerGameUnit;
+        float objHeightPx = entity.height() * pxPerGameUnit;
 
         // Animation* animation = entity.hasAnimation()
         //                            ? world.animationSystem.getAnimation(entity.animation().animationId)

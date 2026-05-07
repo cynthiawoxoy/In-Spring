@@ -3,9 +3,12 @@
 //
 
 #include "Game.h"
+#include "GameConstant.h"
 
 #include <cmath>
 #include "../engine_core/util/Random.h"
+
+// TODO: see if random.h is useful. DELETE ME
 
 namespace Game
 {
@@ -64,6 +67,9 @@ namespace Game
                                       INVALID_SPRITE_ID // TODO: sprite
                                       );
 
+        Entity player = world.findEntity(playerId).value();
+        tail.init(player.x(), player.bottom());
+
         // Double-unit "border" squares
         world.createEntity(borderArchetype,
                            0, 0,
@@ -110,6 +116,8 @@ namespace Game
 
     void Game::onUpdatePostKinematics(World& world)
     {
+        Entity player = world.findEntity(playerId).value();
+        tail.update(player.x(), player.bottom(), world.frameDt);
     }
 
     void Game::onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions)
@@ -176,6 +184,32 @@ namespace Game
         auto player = world.findEntity(playerId).value();
         runtime.renderer.viewPointX = player.x();
         runtime.renderer.viewPointY = player.y();
+    }
+
+    void Game::onDraw()
+    {
+        auto& r = runtime.renderer;
+
+      for (int i = 0; i < TAIL_POINT_COUNT - 1; i++)
+      {
+          DrawLine(
+              static_cast<int>(r.originXPx + (tail.tailPoints[i].x   - r.viewPointX) * r.pxPerGameUnit),
+              static_cast<int>(r.originYPx - (tail.tailPoints[i].y   - r.viewPointY) * r.pxPerGameUnit),
+              static_cast<int>(r.originXPx + (tail.tailPoints[i+1].x - r.viewPointX) * r.pxPerGameUnit),
+              static_cast<int>(r.originYPx - (tail.tailPoints[i+1].y - r.viewPointY) * r.pxPerGameUnit),
+              BEIGE
+          );
+      }
+
+      for (int i = 0; i < TAIL_POINT_COUNT; i++)
+      {
+          DrawCircle(
+              static_cast<int>(r.originXPx + (tail.tailPoints[i].x - r.viewPointX) * r.pxPerGameUnit),
+              static_cast<int>(r.originYPx - (tail.tailPoints[i].y - r.viewPointY) * r.pxPerGameUnit),
+              5.0f,
+              BEIGE
+          );
+      }
     }
 
     void Game::onUpdatePlayer(World& world)

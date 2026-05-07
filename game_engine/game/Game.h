@@ -6,14 +6,13 @@
 #define GAME_ENGINE_GAME_H
 
 #include "../engine_runtime/EngineRuntime.h"
+#include "GameConstant.h"
+#include "Tail.h"
 
 namespace Game
 {
     using namespace EngineRuntime;
 
-    constexpr float GRAVITY = -0.8f;
-    constexpr float PLAYER_JUMP_VELOCITY = 0.2f;
-    constexpr float PLAYER_MOVEMENT_SPEED = 0.4f;
 
     struct Game final : IGame
     {
@@ -31,6 +30,8 @@ namespace Game
 
         AnimationId playerRunAnimationId;
 
+        Tail tail;
+
         void onStart(World& world) override;
         void onUpdateBegin(World& world) override;
         void onUpdatePostKinematics(World& world) override;
@@ -39,6 +40,7 @@ namespace Game
         bool skipEntityLevelCollisionDetection(Entity& entityA, Entity& entityB) override;
         void onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions) override;
         void onUpdatePostCollisionResolution(World& world, std::vector<Collision>& vector) override;
+        void onDraw() override;
         int run();
 
         // simple location, velocity updates

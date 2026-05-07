@@ -3,56 +3,25 @@
 # 1.2 Player's inputManager
     A general jump only edit vy but not vx. if jump, need to clear playerGrounded and currPlatform state
 
-# 2.1 static platform
-optional: down-jump
-
-only resolve collision if the player was above the platform surface last frame and is moving downward.
-Per-frame logic
-
-
-  before applying velocity:
-      prev_bottom = player.y - player.height   # feet position last frame. Need to check origin
-
-  apply gravity and velocity:
-      player.vel.y += gravity * dt
-      player.y     += player.vel.y * dt
-
-  for each platform:
-      if not overlapping(player, platform): continue
-
-      # The two conditions that must both be true to block
-      coming_from_above = prev_bottom >= platform.top
-      moving_downward   = player.vel.y <= 0
-
-      if coming_from_above and moving_downward:
-          player.y       = platform.top + player.height   # snap feet to surface
-          player.vel.y   = 0
-          player.grounded = true
-
-skip collision check while player grounded:
-    if player.grounded:
-          p = player.current_platform
-          if player.right < p.left or player.left > p.right:
-              player.grounded = false   # walked off the edge
-              player.current_platform = null
-          # no further collision checks needed this frame
-    else:
-          # do full sweep to find a landing (for each platform...)
-
+# 2.1 static platform - DONE
 # (optional) 2.1.1 jump down
 down jump. Stand up for dialogue. charged jump: jump change vx as well, and this happens when space key is long
 pressed and player's animation is changed. A general jump only change vy but not vx.
-
 # (optional) 2.1.2 playerGrounded optimization
 When platform grounded, there are redundant calculation due to kinematic update from gravity and reset player's position
 back to top of platform. Maybe I can try optimizing this by creating two archetype, one has acceleration and another does
 not, and switch between them when grounded and ungrounded.
 
-# (bug) 2.1.3 check collision detection. Allow player to fall when center is out of platform and jump
-
 # 2.2 Art assets
 
 # 3.1 Chain Physics and testing using a flower's stem
+- Verlet Integration
+- distance constraints
+- simple circle/line rendering
+
+# TODO: think about tail init position and tail collision with platforms and flower triggers. tail does not collide with platforms, collide with flower triggers
+# TODO: I want tail to appear heavier
+
 # 3.2 Create world map - game
 # 3.3 Render player and platforms
 

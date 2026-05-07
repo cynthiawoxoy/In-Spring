@@ -20,6 +20,9 @@ add_executable(game_engine
         game/main.cpp
         game/Game.cpp
         game/Game.h
+        game/Tail.h
+        game/Tail.cpp
+        game/GameConstant.h
 )
 
 # ==========================================

@@ -21,6 +21,7 @@ namespace EngineRuntime
 
         virtual bool skipLayerLevelCollisionDetection(Entity& entityA, Entity& entityB) { return false; }
         virtual bool skipEntityLevelCollisionDetection(Entity& entityA, Entity& entityB) { return false; }
+        virtual void onDraw() {}
 
         virtual ~IGame() = default;
     };
