@@ -33,6 +33,8 @@ It's a good idea to list more points than you need for this so that if your poin
 
 *Player will control an animal jumping through the world, using its tail to trigger specific switches that cause according flower to bloom. Game ends when all the flowers in the world are in blossom. If chain physics is possible, the tail naturally follows the player's movements and swing through space. To add some difficulty to the game, only specific part of player's long tail can activate matched switches(use color of patterns to indicate the match). Collision detection with quad tree improvement will be performed in the process.*
 
+## See Writeup as final guide for task scores and description
+
 ## Game Tasks
 *Complexity Point Subtotal: [8]*
 
