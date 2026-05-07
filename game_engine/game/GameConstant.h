@@ -10,7 +10,7 @@ namespace Game
     constexpr float GRAVITY = -1.0f;
 
     constexpr float PLAYER_WIDTH = 0.2f;
-    constexpr float PLAYER_HEIGHT = 0.14f;
+    constexpr float PLAYER_HEIGHT = 0.1f;
     constexpr float PLAYER_JUMP_VELOCITY = 0.5f;
 
     constexpr float PLAYER_MOVEMENT_SPEED = 0.6f;

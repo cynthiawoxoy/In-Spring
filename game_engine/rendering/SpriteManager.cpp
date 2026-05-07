@@ -17,6 +17,7 @@ namespace Rendering
 
     Sprite* SpriteManager::getSprite(SpriteId id)
     {
+        if (id == INVALID_SPRITE_ID || id >= sprites.size()) return nullptr;
         return &sprites[id];
     }
 }

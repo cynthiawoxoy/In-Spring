@@ -23,6 +23,7 @@ add_executable(game_engine
         game/Tail.h
         game/Tail.cpp
         game/GameConstant.h
+        game/flowers.h
 )
 
 # ==========================================

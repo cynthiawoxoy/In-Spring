@@ -6,9 +6,7 @@
 #include "GameConstant.h"
 
 #include <cmath>
-#include "../engine_core/util/Random.h"
 
-// TODO: see if random.h is useful. DELETE ME
 
 namespace Game
 {
@@ -24,7 +22,8 @@ namespace Game
         borderArchetype = world.createArchetype(
             Archetype::COMP_POSITION
             | Archetype::COMP_SIZE
-            | Archetype::COMP_COLOR);
+            | Archetype::COMP_COLOR
+            | Archetype::COMP_SPRITE);
         playerArchetype = world.createArchetype(
             Archetype::COMP_POSITION
             | Archetype::COMP_VELOCITY
@@ -40,20 +39,20 @@ namespace Game
             | Archetype::COMP_COLLIDER
             | Archetype::COMP_SPRITE);
 
-        /* TODO: DELETE ME
-        *enum Components : ComponentMask
-        {
-            COMP_POSITION = 1 << 0,
-            COMP_VELOCITY = 1 << 1,
-            COMP_ACCELERATION = 1 << 2,
-            COMP_SIZE = 1 << 3,
-            COMP_COLOR = 1 << 4,
-            COMP_STATE = 1 << 5,
-            COMP_COLLIDER = 1 << 6,
-            COMP_ANIMATION = 1 << 7,
-            COMP_SPRITE = 1 << 8,
-        };
-         */
+        flowerTriggerArchetype = world.createArchetype(
+            Archetype::COMP_POSITION
+            | Archetype::COMP_SIZE
+            | Archetype::COMP_COLOR);
+
+        petalArchetype = world.createArchetype(
+            Archetype::COMP_POSITION
+            | Archetype::COMP_SIZE
+            | Archetype::COMP_ANIMATION
+            | Archetype::COMP_SPRITE);
+
+        playerSpriteId = runtime.renderer.spriteManager.createSprite("assets/player.png", 1, 1);
+        petalSpriteId = runtime.renderer.spriteManager.createSprite("assets/petal.png", 1, 1);
+        backgroundSpriteId = runtime.renderer.spriteManager.createSprite("assets/background.jpg", 1, 1);
 
         playerId = world.createEntity(playerArchetype,
                                       START_POSITION_X + PLAYER_WIDTH / 2,
@@ -66,37 +65,26 @@ namespace Game
                                       ColliderShape::RECT,
                                       ColliderLayers::LAYER_PLAYER,
                                       {},
-                                      INVALID_SPRITE_ID // TODO: sprite
+                                      playerSpriteId
                                       );
 
         Entity player = world.findEntity(playerId).value();
         tail.init(player.x(), player.bottom());
 
-        // Double-unit "border" squares
         world.createEntity(borderArchetype,
+                           0.1, 0,
                            0, 0,
                            0, 0,
-                           0, 0,
-                           2, 2,
-                           yellow,
-                           Entity::STATE_DEFAULT,
-                           ColliderShape::RECT,
-                           LAYER_NONE,
-                           {},
-                           INVALID_SPRITE_ID);
-        world.createEntity(borderArchetype,
-                           0, 0,
-                           0, 0,
-                           0, 0,
-                           1.95, 1.95,
+                           2.45, 2.45,
                            rayWhite,
                            Entity::STATE_DEFAULT,
                            ColliderShape::RECT,
                            LAYER_NONE,
                            {},
-                           INVALID_SPRITE_ID);
+                           backgroundSpriteId);
 
         createPlatforms(world);
+        createFlowerTriggers(world);
     }
 
     void Game::onUpdateBegin(World& world)
@@ -108,7 +96,38 @@ namespace Game
     void Game::onUpdatePostKinematics(World& world)
     {
         Entity player = world.findEntity(playerId).value();
-        tail.update(player.x(), player.bottom(), world.frameDt, isPlayerGrounded());
+        tail.update(player.x() - PLAYER_WIDTH / 3, player.bottom() + PLAYER_HEIGHT / 2, world.frameDt, isPlayerGrounded());
+
+        TailPoint& tailTip = tail.tailPoints[TAIL_POINT_COUNT - 1];
+        // a fake tailTip-trigger "collision check", because tail physics does not fit into ECS system and hard to fit in existing collision detection system
+        for (auto& trigger : flowerTriggers)
+        {
+            if (trigger.activated) continue;
+            float dx = tailTip.x - trigger.x;
+            float dy = tailTip.y - trigger.y;
+            if (dx*dx + dy*dy < trigger.triggerRadius * trigger.triggerRadius) trigger.activated = true;
+        }
+
+        // petal rotation animation
+        for (auto& trigger : flowerTriggers)
+        {
+            if (!trigger.activated) continue;
+
+            trigger.rotationAngle += PETAL_ROTATION_SPEED * world.frameDt;
+
+
+            for (int i = 0; i < trigger.petalIds.size(); i++)
+            {
+                auto opt = world.findEntity(trigger.petalIds[i]);
+                if (!opt) continue;
+
+                Entity& petal = opt.value();
+                float angle = trigger.petalInitialAngles[i] + trigger.rotationAngle;
+                petal.x() = trigger.flowerX + std::cos(angle) * trigger.petalDistance;
+                petal.y() = trigger.flowerY + std::sin(angle) * trigger.petalDistance;
+            }
+
+        }
     }
 
     void Game::onUpdatePostCollisionDetection(World& world, std::vector<Collision>& collisions)
@@ -181,26 +200,38 @@ namespace Game
     {
         auto& r = runtime.renderer;
 
-      for (int i = 0; i < TAIL_POINT_COUNT - 1; i++)
-      {
-          DrawLine(
-              static_cast<int>(r.originXPx + (tail.tailPoints[i].x   - r.viewPointX) * r.pxPerGameUnit),
-              static_cast<int>(r.originYPx - (tail.tailPoints[i].y   - r.viewPointY) * r.pxPerGameUnit),
-              static_cast<int>(r.originXPx + (tail.tailPoints[i+1].x - r.viewPointX) * r.pxPerGameUnit),
-              static_cast<int>(r.originYPx - (tail.tailPoints[i+1].y - r.viewPointY) * r.pxPerGameUnit),
-              BEIGE
-          );
-      }
+        for (int i = 0; i < TAIL_POINT_COUNT - 1; i++)
+        {
+            DrawLineEx(Vector2{ r.originXPx + (tail.tailPoints[i].x   - r.viewPointX) * r.pxPerGameUnit,
+                 r.originYPx - (tail.tailPoints[i].y   - r.viewPointY) * r.pxPerGameUnit },
+                    Vector2{ r.originXPx + (tail.tailPoints[i+1].x - r.viewPointX) * r.pxPerGameUnit,
+                    r.originYPx - (tail.tailPoints[i+1].y - r.viewPointY) * r.pxPerGameUnit },
+                    TAIL_JOINT_RADIUS * 2,
+                    BEIGE);
+        }
 
-      for (int i = 0; i < TAIL_POINT_COUNT; i++)
-      {
-          DrawCircle(
-              static_cast<int>(r.originXPx + (tail.tailPoints[i].x - r.viewPointX) * r.pxPerGameUnit),
-              static_cast<int>(r.originYPx - (tail.tailPoints[i].y - r.viewPointY) * r.pxPerGameUnit),
-              5.0f,
-              BEIGE
-          );
-      }
+        for (int i = 0; i < TAIL_POINT_COUNT; i++)
+        {
+            DrawCircle(
+                static_cast<int>(r.originXPx + (tail.tailPoints[i].x - r.viewPointX) * r.pxPerGameUnit),
+                static_cast<int>(r.originYPx - (tail.tailPoints[i].y - r.viewPointY) * r.pxPerGameUnit),
+                TAIL_JOINT_RADIUS,
+                BEIGE);
+        }
+
+        // flower animation
+        for (auto& trigger : flowerTriggers)
+        {
+            float screenX = r.originXPx + (trigger.x - r.viewPointX) * r.pxPerGameUnit;
+            float screenY = r.originYPx - (trigger.y - r.viewPointY) * r.pxPerGameUnit;
+            float screenRadius = trigger.triggerRadius * r.pxPerGameUnit;
+
+            DrawCircleLines(
+                static_cast<int>(screenX),
+                static_cast<int>(screenY),
+                screenRadius,
+                trigger.activated ? GREEN : RED);
+        }
     }
 
     void Game::onUpdatePlayer(World& world)
@@ -226,7 +257,7 @@ namespace Game
 
         // regular onUpdate velocity and acceleration
         if (isPlayerGrounded())
-        {   // TODO: tails or player might need positive acceleration in the future, if bug, check here
+        {
             player.vy() = 0;
             player.ay() = 0;
         } else { player.ay() = GRAVITY; }
@@ -236,17 +267,6 @@ namespace Game
             player.vx() = -PLAYER_MOVEMENT_SPEED;
         else if (runtime.inputManager.moveRight)
             player.vx() = PLAYER_MOVEMENT_SPEED;
-
-
-
-
-        /*
-        if (runtime.inputManager.standUp)
-            // TODO: switch to standup position and show a dialoge
-        if (runtime.inputManager.getDown)
-            // TODO: get down
-        */
-
     }
 
     void Game::createPlatforms(World& world)
@@ -336,5 +356,88 @@ namespace Game
                                LAYER_PLATFORMS,
                                {},
                                INVALID_SPRITE_ID);
+    }
+
+    void Game::createFlowerTriggers(World& world)
+    {
+        GameColor triggerColor = warmBrown;
+
+        // Trigger 1
+        world.createEntity(flowerTriggerArchetype,
+                                START_POSITION_X + PLATFORM_GRID_LENGTH * 7.3,
+                                START_POSITION_Y + PLATFORM_GRID_LENGTH / 2 - TAIL_LENGTH * 0.6,
+                               0, 0,
+                               0, 0,
+                               FLOWER_TRIGGER_RAD, FLOWER_TRIGGER_RAD,
+                               triggerColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::CIRCLE,
+                               LAYER_NONE,
+                               {},
+                               INVALID_SPRITE_ID);
+        FlowerTrigger trigger1;
+        trigger1.x = START_POSITION_X + PLATFORM_GRID_LENGTH * 7.3;
+        trigger1.y = START_POSITION_Y + PLATFORM_GRID_LENGTH / 2 - TAIL_LENGTH * 0.6;
+        trigger1.flowerX = START_POSITION_X + PLATFORM_GRID_LENGTH * 9.0f;
+        trigger1.flowerY = START_POSITION_Y + PLATFORM_GRID_LENGTH * 2.0f;
+
+        int petalCount = 5;
+        for (int i = 0; i < petalCount; i++)
+        {
+            float angle = (2.0f * M_PI / petalCount) * i;
+            float px = trigger1.flowerX + std::cos(angle) * trigger1.petalDistance;
+            float py = trigger1.flowerY + std::sin(angle) * trigger1.petalDistance;
+            EntityId id = world.createEntity(petalArchetype,
+                                        px, py,
+                                        0, 0, 0, 0,
+                                        PEDAL_WIDTH, PEDAL_HEIGHT,
+                                        white,
+                                        Entity::STATE_DEFAULT,
+                                        ColliderShape::RECT,
+                                        LAYER_NONE,
+                                        {},
+                                        petalSpriteId);
+            trigger1.petalIds.push_back(id);
+            trigger1.petalInitialAngles.push_back(angle);
+        }
+        flowerTriggers.push_back(trigger1);
+
+        // Trigger 2
+        world.createEntity(flowerTriggerArchetype,
+                                START_POSITION_X + PLATFORM_GRID_LENGTH * 13,
+                                START_POSITION_Y + PLATFORM_GRID_LENGTH * -4.5,
+                               0, 0,
+                               0, 0,
+                               FLOWER_TRIGGER_RAD, FLOWER_TRIGGER_RAD,
+                               triggerColor,
+                               Entity::STATE_DEFAULT,
+                               ColliderShape::CIRCLE,
+                               LAYER_NONE,
+                               {},
+                               INVALID_SPRITE_ID);
+        FlowerTrigger trigger2;
+        trigger2.x = START_POSITION_X + PLATFORM_GRID_LENGTH * 13;
+        trigger2.y = START_POSITION_Y + PLATFORM_GRID_LENGTH * -4.5;
+        trigger2.flowerX = START_POSITION_X + PLATFORM_GRID_LENGTH * 11;
+        trigger2.flowerY = START_POSITION_Y + PLATFORM_GRID_LENGTH * -1.5f;
+        for (int i = 0; i < petalCount; i++)
+        {
+            float angle = (2.0f * M_PI / petalCount) * i;
+            float px = trigger2.flowerX + std::cos(angle) * trigger2.petalDistance;
+            float py = trigger2.flowerY + std::sin(angle) * trigger2.petalDistance;
+            EntityId id = world.createEntity(petalArchetype,
+                                        px, py,
+                                        0, 0, 0, 0,
+                                        PEDAL_WIDTH, PEDAL_HEIGHT,
+                                        white,
+                                        Entity::STATE_DEFAULT,
+                                        ColliderShape::RECT,
+                                        LAYER_NONE,
+                                        {},
+                                        petalSpriteId);
+            trigger2.petalIds.push_back(id);
+            trigger2.petalInitialAngles.push_back(angle);
+        }
+        flowerTriggers.push_back(trigger2);
     }
 }

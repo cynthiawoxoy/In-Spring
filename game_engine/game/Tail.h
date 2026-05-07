@@ -17,6 +17,7 @@ namespace Game
 
     constexpr int TAIL_POINT_COUNT = 3;
     constexpr float TAIL_SEGMENT_LENGTH = 0.06f; // expected length between two consecutive points of tail
+    constexpr float TAIL_JOINT_RADIUS = 8.0f;
     constexpr float LATCH_TAIL_GRAVITY = -4.0f;  // modify "heaviness" of tail
     constexpr float UNLATCH_TAIL_GRAVITY = -2.3f;
     constexpr float TAIL_LENGTH = TAIL_POINT_COUNT * TAIL_SEGMENT_LENGTH; // for set up flower trigger position underneath platform

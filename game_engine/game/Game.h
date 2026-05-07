@@ -8,6 +8,7 @@
 #include "../engine_runtime/EngineRuntime.h"
 #include "GameConstant.h"
 #include "Tail.h"
+#include "Flowers.h"
 
 namespace Game
 {
@@ -25,12 +26,15 @@ namespace Game
         Archetype* borderArchetype;
         Archetype* playerArchetype;
         Archetype* platformArchetype;
+        Archetype* flowerTriggerArchetype;
+        Archetype* petalArchetype;
 
-        SpriteId playerRunSpriteSheetId;
-
-        AnimationId playerRunAnimationId;
+        SpriteId playerSpriteId;
+        SpriteId petalSpriteId;
+        SpriteId backgroundSpriteId;
 
         Tail tail;
+        std::vector<FlowerTrigger> flowerTriggers;
 
         void onStart(World& world) override;
         void onUpdateBegin(World& world) override;
@@ -46,6 +50,7 @@ namespace Game
         // simple location, velocity updates
         void onUpdatePlayer(World& world);
         void createPlatforms(World& world);
+        void createFlowerTriggers(World& world);
 
         const bool isPlayerGrounded() const { return latchedToPlatform != INVALID_ENTITY_ID; }
 
@@ -53,8 +58,10 @@ namespace Game
         {
             LAYER_NONE,
             LAYER_PLAYER,
-            LAYER_PLATFORMS
+            LAYER_PLATFORMS,
         };
+
+
     };
 }
 
